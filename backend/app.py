@@ -1,3 +1,6 @@
+
+# CNN 딥러닝모델 사용함!
+
 import os
 from flask import Flask, request, jsonify
 import tensorflow as tf
