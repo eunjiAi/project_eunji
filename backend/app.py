@@ -6,7 +6,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # ResNet 모델 로드
-resnet_model = tf.keras.models.load_model('models/resnet50_image_classifier_model.h5')
+resnet_model = tf.keras.models.load_model('models/train_1021.h5')
 
 # 결과를 저장할 경로 설정
 RESULT_DIR = r'C:\Users\ict01-20\OneDrive\바탕 화면\projectUpload\result'
@@ -26,6 +26,9 @@ def create_result_folder():
 def predict():
     # 이미지 파일 받기
     image_file = request.files['image']
+    
+    # 파일 이름 가져오기
+    image_filename = image_file.filename
 
     # 이미지 전처리 (모델이 기대하는 크기: 150x150)
     img = tf.image.decode_image(image_file.read(), channels=3)
@@ -45,6 +48,9 @@ def predict():
 
     # 이미지를 저장
     tf.keras.preprocessing.image.save_img(image_path, img[0])
+
+    # 콘솔 출력
+    print(f"Image: {image_filename} | Prediction: {label} | Saved at: {image_path}")
 
     return jsonify({'prediction': label, 'image_path': image_path})
 
