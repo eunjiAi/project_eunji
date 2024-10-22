@@ -13,7 +13,7 @@ function Upload() {
     event.preventDefault();
     const formData = new FormData();
     formData.append('image', selectedFile);
-    formData.append('model_type', 'resnet'); // 'cnn'으로 변경 가능
+    formData.append('model_type', 'cnn'); 
 
     try {
       const response = await fetch('http://localhost:5000/predict', {
@@ -30,7 +30,7 @@ function Upload() {
 
   return (
     <div>
-      <h2>Upload an image for classification</h2>
+      <h2>분류할 이미지 업로드</h2>
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} />
         <button type="submit">Submit</button>
