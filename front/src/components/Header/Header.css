@@ -1,0 +1,103 @@
+/* 전체 네비게이션 바 스타일 */
+.navbar {
+  background-color: #fff;
+  height: 80px;
+  display: flex;
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  align-items: center;
+  padding: 0 50px;
+  border-bottom: 2px solid #eee; /* 구분선 */
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* 왼쪽 내이름로고 */
+.project-name {
+  font-size: 24px; 
+  font-weight: bold;
+  color: #333;
+  margin-right: 50px; /* ProjectEJ와 메뉴 간 간격 */
+}
+
+.navbar-menu {
+  display: flex;
+  list-style: none;
+}
+
+.navbar-item {
+  position: relative;
+  margin: 0 20px; /* 각 메뉴 간 간격 */
+}
+
+.navbar-link {
+  color: #333;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 8px 16px;
+  font-weight: normal;
+  transition: font-weight 0.3s ease; /* 호버 시 글씨 굵어지게 */
+}
+
+.navbar-link:hover {
+  font-weight: bold;
+}
+
+/* 서브메뉴 스타일 */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 135%; /* 서브메뉴랑 메인메뉴 사이 간격 조정 */
+  left: 0;
+  background-color: #fff;
+  list-style: none;
+  padding: 10px 0;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-link {
+  color: #333;
+  text-decoration: none;
+  padding: 10px 20px;
+  display: block;
+  transition: font-weight 0.3s ease;
+}
+
+.dropdown-link:hover {
+  font-weight: bold;
+}
+
+/* 반응형 스타일 */
+@media screen and (max-width: 960px) {
+  .navbar-container {
+    flex-direction: column;
+    padding: 0 20px;
+  }
+
+  .navbar-menu {
+    flex-direction: column;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    background-color: #fff;
+    width: 100%;
+    display: none;
+    box-shadow: none;
+  }
+
+  .navbar-menu.active {
+    display: flex;
+  }
+
+  .navbar-item {
+    margin: 20px 0;
+  }
+}
