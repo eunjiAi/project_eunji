@@ -5,14 +5,13 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# 모델 로드
+# ResNet 모델 로드
 resnet_model = tf.keras.models.load_model('models/resnet50_image_classifier_model.h5')
-cnn_model = tf.keras.models.load_model('models/small_cnn_model.h5')
 
-# 저장 경로 설정
+# 결과를 저장할 경로 설정
 RESULT_DIR = r'C:\Users\ict01-20\OneDrive\바탕 화면\projectUpload\result'
 
-# 폴더 생성 함수
+# 결과 폴더 생성 함수
 def create_result_folder():
     if not os.path.exists(RESULT_DIR):
         os.makedirs(RESULT_DIR)
@@ -25,22 +24,18 @@ def create_result_folder():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # 모델 타입 및 이미지 파일
-    model_type = request.form.get('model_type')
+    # 이미지 파일 받기
     image_file = request.files['image']
-    
-    # 이미지 전처리
+
+    # 이미지 전처리 (모델이 기대하는 크기: 150x150)
     img = tf.image.decode_image(image_file.read(), channels=3)
-    img = tf.image.resize(img, [224, 224])
+    img = tf.image.resize(img, [150, 150])  # 150x150으로 리사이즈
     img = tf.expand_dims(img, axis=0)
 
     # 모델 예측
-    if model_type == 'resnet':
-        prediction = resnet_model.predict(img)
-    else:
-        prediction = cnn_model.predict(img)
+    prediction = resnet_model.predict(img)
 
-    # 결과 분류 (예시로 0: OK, 1: NG)
+    # 예측 결과에 따라 라벨 설정 (0.5 기준)
     label = 'ok' if prediction[0][0] > 0.5 else 'ng'
 
     # 결과 파일 저장
