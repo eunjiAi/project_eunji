@@ -129,7 +129,7 @@ function WebcamCapture() {
         <button onClick={stopCapturing} disabled={intervalId === null}>Stop</button>
       </div>
 
-      {/* 검사 결과에 대한 UI 표시 */}
+      {/* 검사 결과에 따른 UI 표시 */}
       {prediction && (
         <div style={{
           marginTop: '20px', 

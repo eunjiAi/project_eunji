@@ -49,6 +49,9 @@ def predict():
     # 예측 결과에 따라 라벨 설정 (0.5 기준)
     label = 'ok' if prediction[0][0] > 0.5 else 'ng'
 
+    # 콘솔에 예측 결과 출력
+    print(f"Prediction result for {image_filename}: {label}")
+
     # 모드에 따라 다른 처리 수행
     mode = request.form.get('mode')  # 클라이언트에서 모드 받아오기 (capture, inspect, inspectSave)
 
