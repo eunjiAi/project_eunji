@@ -9,48 +9,48 @@
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     font-family: 'Roboto', sans-serif;
-  }
-  
-  /* 타이틀 스타일 */
-  h2 {
+}
+
+/* 타이틀 스타일 */
+h2 {
     font-size: 2.8rem;
     font-weight: 700;
     margin-bottom: 30px;
     color: #333;
-  }
-  
-  /* 시간 간격 입력 필드 스타일 */
-  .input-group {
-    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* 시간 간격 입력 필드 스타일 및 버튼 배치 */
+.input-group {
     display: flex;
-    justify-content: center;
     align-items: center;
-  }
-  
-  .input-group label {
+    margin-left: 20px; /* 모드 버튼 옆으로 배치 */
+}
+
+.input-group label {
     font-size: 1.4rem;
     color: #555;
     margin-right: 10px;
     font-weight: bold;
-  }
-  
-  .input-group input {
+}
+
+.input-group input {
     width: 120px;
     padding: 10px;
     font-size: 1.2rem;
     border-radius: 5px;
     border: 1px solid #ccc;
     transition: all 0.3s ease;
-  }
-  
-  .input-group input:focus {
+}
+
+.input-group input:focus {
     border-color: #007bff;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
     outline: none;
-  }
-  
-  /* 버튼 스타일 */
-  button {
+}
+
+/* 버튼 스타일 */
+button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -61,56 +61,58 @@
     margin: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  button:hover {
+}
+
+button:hover {
     background-color: #0056b3;
     transform: translateY(-2px);
-  }
-  
-  button:disabled {
+}
+
+button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-  }
-  
-  /* 모드 선택된 상태 표시 */
-  h3 {
+}
+
+/* 모드 선택된 상태 표시 */
+h3 {
     font-size: 1.6rem;
     color: #007bff;
-    margin-bottom: 30px;
-  }
-  
-  /* 메인 콘텐츠 레이아웃 (비디오 + 검사 결과 박스) */
-  .main-content {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* 메인 콘텐츠 레이아웃 (비디오 + 검사 결과 박스) */
+.main-content {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-top: 30px;
-  }
-  
-  .video-container {
+}
+
+.video-container {
     flex-grow: 2;
     margin-right: 30px;
-  }
-  
-  .video-container video {
+    position: relative;
+}
+
+.video-container video {
     width: 100%;
     border-radius: 10px;
     transition: border 0.3s ease;
     border: none;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .video-container.ok video {
+}
+
+.video-container.ok video {
     border: 5px solid green;
-  }
-  
-  .video-container.ng video {
+}
+
+.video-container.ng video {
     border: 5px solid red;
-  }
-  
-  /* 검사 결과 박스 */
-  .prediction-box {
+}
+
+/* 검사 결과 박스 */
+.prediction-box {
     flex-basis: 350px;
     padding: 20px;
     background-color: #fff;
@@ -119,27 +121,43 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: border-color 0.3s ease, background-color 0.3s ease;
-  }
-  
-  .prediction-box h3 {
+}
+
+.prediction-box h3 {
     font-size: 1.8rem;
     color: #333;
     margin-bottom: 15px;
     font-weight: 600;
-  }
-  
-  /* 검사 결과 텍스트 */
-  .prediction-result {
+}
+
+/* 검사 결과 텍스트 */
+.prediction-result {
     font-size: 2rem;
     font-weight: bold;
     color: #333;
-  }
-  
-  .prediction-result.ok {
+}
+
+.prediction-result.ok {
     color: green;
-  }
-  
-  .prediction-result.ng {
+}
+
+.prediction-result.ng {
     color: red;
-  }
-  
+}
+
+/* 모드 버튼과 시간 간격 입력 필드를 나란히 배치 */
+.button-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.button-group button {
+    margin-right: 20px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
