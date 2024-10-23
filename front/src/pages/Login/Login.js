@@ -42,7 +42,7 @@ function Login() {
           <button type="submit" className="login-button">로그인</button>
         </form>
         <p className="signup-prompt">
-            회원가입이 필요한가요? <Link to="/signup" className="signup-link"> 회원가입</Link>
+            회원가입이 아직인가요? <Link to="/signup" className="signup-link"> 회원가입</Link>
         </p>
       </section>
     </div>

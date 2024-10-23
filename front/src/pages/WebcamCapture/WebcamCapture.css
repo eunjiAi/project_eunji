@@ -4,7 +4,7 @@ body {
     padding: 0;
     background: linear-gradient(135deg, #e9efff, #b2c9ff); /* 전체 배경 그라데이션 적용 */
     font-family: 'Roboto', sans-serif;
-    color: #334e68; /* 텍스트 색상을 부드러운 네이비 톤으로 */
+    color: #4682b4; /* 텍스트 색상을 Dark Slate Gray로 */
 }
 
 /* 기본 레이아웃 */
@@ -23,7 +23,7 @@ h2 {
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: #0056b3; /* 메인 타이틀 색상을 강조된 블루로 */
+    color: #334e68; /* OspreyAI 모드 선택 색상 변경 */
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -37,7 +37,7 @@ h2 {
 
 .input-group label {
     font-size: 1.6rem;
-    color: #334e68;
+    color: #4682b4; /* 텍스트 색상을 Dark Slate Gray로 변경 */
     margin-right: 15px;
     font-weight: bold;
 }
@@ -53,14 +53,14 @@ h2 {
 }
 
 .input-group input:focus {
-    border-color: #0056b3;
-    box-shadow: 0 0 8px rgba(0, 86, 179, 0.5);
+    border-color: #4682b4; /* 포커스 시 텍스트 색상과 일치 */
+    box-shadow: 0 0 8px rgba(47, 79, 79, 0.5);
     outline: none;
 }
 
 /* 버튼 스타일 */
 button {
-    background-color: #0056b3;
+    background-color: #4682b4; /* 버튼 색상을 Dark Slate Gray로 변경 */
     color: white;
     border: none;
     padding: 14px 28px;
@@ -73,7 +73,7 @@ button {
 }
 
 button:hover {
-    background-color: #004299;
+    background-color: #263d3d; /* 버튼 호버 시 약간 더 어둡게 */
 }
 
 button:disabled {
@@ -85,7 +85,7 @@ button:disabled {
 /* 모드 선택된 상태 표시 */
 h3 {
     font-size: 1.8rem;
-    color: #0056b3;
+    color: #334e68; 
     margin-bottom: 20px;
     text-align: center;
     text-transform: uppercase;
@@ -161,9 +161,10 @@ h3 {
     min-height: 150px;
 }
 
+/* 검사 결과 박스 */
 .prediction-box h3 {
     font-size: 2rem;
-    color: #334e68; /* 텍스트 색상 조정 */
+    color: #334e68;
     margin-bottom: 15px;
     font-weight: 600;
 }
@@ -172,7 +173,7 @@ h3 {
 .prediction-result {
     font-size: 2rem;
     font-weight: bold;
-    color: #334e68;
+    color: #334e68; 
     height: 50px;
     display: flex;
     justify-content: center;
@@ -199,7 +200,7 @@ h3 {
 
 .count-box p {
     font-size: 1.6rem;
-    color: #334e68;
+    color: #334e68; /* 총 검사 횟수, OK, NG 텍스트 */
     margin: 5px 0;
 }
 
