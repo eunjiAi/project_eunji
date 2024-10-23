@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom'; // useNavigate로 변경
 import './WebcamCapture.css'; // Import the CSS
 
 function WebcamCapture() {
-  const [prediction, setPrediction] = useState(''); // 서버에서 받은 예측 결과
+  const [prediction, setPrediction] = useState('검사전'); // 초기 상태는 '검사전'
   const [intervalId, setIntervalId] = useState(null); // 타이머 ID 저장
   const [mode, setMode] = useState(''); // 현재 모드 ('inspect', 'inspectSave')
   const [captureInterval, setCaptureInterval] = useState(1000); // 몇 초마다 촬영할지 (기본값 1초)
   const videoRef = useRef(null); // 웹캠 스트림을 표시할 비디오 엘리먼트
   const canvasRef = useRef(null); // 이미지를 캡처할 캔버스
+  const navigate = useNavigate(); // 페이지 이동을 감지하는 useNavigate 훅 사용
 
   // 웹캠 스트림 시작
   useEffect(() => {
@@ -19,14 +21,25 @@ function WebcamCapture() {
         console.error("Error accessing webcam:", err);
       }
     }
+    
     startWebcam();
-    return () => {
-      // 컴포넌트 언마운트 시 웹캠 스트림 종료
+
+    // 페이지 이동 시 웹캠 종료 처리
+    const stopWebcam = () => {
       if (videoRef.current && videoRef.current.srcObject) {
         videoRef.current.srcObject.getTracks().forEach(track => track.stop());
       }
     };
-  }, []);
+
+    // 페이지가 언마운트되거나 닫힐 때 웹캠 스트림 중지
+    window.addEventListener('beforeunload', stopWebcam);
+
+    return () => {
+      // 컴포넌트 언마운트 시 웹캠 스트림 종료
+      stopWebcam();
+      window.removeEventListener('beforeunload', stopWebcam);
+    };
+  }, [navigate]); // 페이지 이동을 감지하는 useNavigate 훅 사용
 
   // prediction 상태 변경 감지
   useEffect(() => {
@@ -41,6 +54,7 @@ function WebcamCapture() {
   // n초마다 이미지 캡처하여 서버로 전송
   const startCapturing = () => {
     if (!intervalId && mode) {
+      setPrediction('검사중'); // 검사 중으로 변경
       const id = setInterval(async () => {
         const canvas = canvasRef.current;
         const video = videoRef.current;
@@ -65,7 +79,7 @@ function WebcamCapture() {
               body: formData,
             });
             const result = await response.json();
-            setPrediction(result.prediction);
+            setPrediction(result.prediction); // OK 또는 NG로 변경
 
             if (mode === 'inspectSave') {
               console.log(`Saved image with prediction: ${result.prediction}`);
@@ -130,23 +144,27 @@ function WebcamCapture() {
       {/* 현재 선택된 모드 표시 */}
       <h3>현재 선택된 모드: {getModeText()}</h3>
 
-      <div className={`video-container ${prediction}`}>
-        <video ref={videoRef} autoPlay />
+      <div className="main-content">
+        <div className={`video-container ${prediction}`}>
+          <video ref={videoRef} autoPlay />
+        </div>
+        
+        <div className={`prediction-box ${prediction}`}>
+          <h3>검사 결과</h3>
+          <div className={`prediction-result ${prediction}`}>
+            <h3>{prediction.toUpperCase()}</h3>
+            {prediction === 'ng' && <p>불량입니다!</p>}
+          </div>
+        </div>
+
       </div>
+
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       
       <div>
         <button onClick={startCapturing} disabled={intervalId !== null}>Start</button>
         <button onClick={stopCapturing} disabled={intervalId === null}>Stop</button>
       </div>
-
-      {/* 검사 결과에 따른 UI 표시 */}
-      {prediction && (
-        <div className={`prediction-result ${prediction}`}>
-          <h3>검사 결과: {prediction.toUpperCase()}</h3>
-          {prediction === 'ng' && <p>불량입니다!</p>}
-        </div>
-      )}
     </div>
   );
 }

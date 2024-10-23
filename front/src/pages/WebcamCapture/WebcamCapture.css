@@ -1,73 +1,51 @@
 /* WebcamCapture.css */
 
-/* 기본적으로 테두리 없음 */
-.video-container {
-    display: inline-block;
-    margin: 20px 0;
-  }
-  
-  .video-container video {
-    width: 100%;
-    border-radius: 10px;
-    transition: border 0.3s ease;
-    border: none; /* 기본적으로 테두리 없음 */
-  }
-  
-  /* 판정 결과에 따른 테두리 */
-  .video-container.ok video {
-    border: 5px solid green;
-  }
-  
-  .video-container.ng video {
-    border: 5px solid red;
-  }
-  
-  /* 기본 레이아웃 */
-  .container {
-    max-width: 800px;
+/* 기본 레이아웃 */
+.container {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-    background-color: #f5f5f5;
+    padding: 40px;
+    background-color: #f7f7f7;
     border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-family: 'Arial', sans-serif;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif;
   }
   
   /* 타이틀 스타일 */
   h2 {
-    font-size: 2.5rem;
-    font-weight: 600;
-    margin-bottom: 20px;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 30px;
     color: #333;
   }
   
   /* 시간 간격 입력 필드 스타일 */
   .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
   .input-group label {
-    font-size: 1.2rem;
-    color: #666;
+    font-size: 1.4rem;
+    color: #555;
     margin-right: 10px;
+    font-weight: bold;
   }
   
   .input-group input {
-    width: 100px;
-    padding: 8px;
-    font-size: 1rem;
+    width: 120px;
+    padding: 10px;
+    font-size: 1.2rem;
     border-radius: 5px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     transition: all 0.3s ease;
   }
   
   .input-group input:focus {
     border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
     outline: none;
   }
   
@@ -76,17 +54,18 @@
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    border-radius: 8px;
-    margin: 5px;
+    padding: 12px 25px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 5px;
+    margin: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
   }
   
   button:hover {
     background-color: #0056b3;
-    transform: scale(1.05);
+    transform: translateY(-2px);
   }
   
   button:disabled {
@@ -96,38 +75,71 @@
   
   /* 모드 선택된 상태 표시 */
   h3 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: #007bff;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
   
-  /* 검사 결과 표시 */
-  .prediction-result {
-    margin-top: 20px;
+  /* 메인 콘텐츠 레이아웃 (비디오 + 검사 결과 박스) */
+  .main-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 30px;
+  }
+  
+  .video-container {
+    flex-grow: 2;
+    margin-right: 30px;
+  }
+  
+  .video-container video {
+    width: 100%;
     border-radius: 10px;
+    transition: border 0.3s ease;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .video-container.ok video {
+    border: 5px solid green;
+  }
+  
+  .video-container.ng video {
+    border: 5px solid red;
+  }
+  
+  /* 검사 결과 박스 */
+  .prediction-box {
+    flex-basis: 350px;
     padding: 20px;
-    font-size: 1.5rem;
-    color: white;
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .prediction-box h3 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  
+  /* 검사 결과 텍스트 */
+  .prediction-result {
+    font-size: 2rem;
     font-weight: bold;
+    color: #333;
   }
   
   .prediction-result.ok {
-    background-color: #28a745;
-    border: 5px solid #28a745;
+    color: green;
   }
   
   .prediction-result.ng {
-    background-color: #dc3545;
-    border: 5px solid #dc3545;
-  }
-  
-  .prediction-result p {
-    margin-top: 10px;
-    font-size: 1.2rem;
-    color: white;
-  }
-  
-  .prediction-result.ng p {
-    color: #ffd1d1;
+    color: red;
   }
   
