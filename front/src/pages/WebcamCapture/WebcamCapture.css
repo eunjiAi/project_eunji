@@ -1,13 +1,18 @@
+/* 전체 페이지 배경 */
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e9efff, #b2c9ff); /* 전체 배경 그라데이션 적용 */
+    font-family: 'Roboto', sans-serif;
+    color: #334e68; /* 텍스트 색상을 부드러운 네이비 톤으로 */
+}
+
 /* 기본 레이아웃 */
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding-left: 25%;
-    padding-right: 25%;
-    padding-top: 0.01%;
+    padding-top: 0.1%;
     border-radius: 20px;
-    /* box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); */
-    font-family: 'Roboto', sans-serif;
 }
 
 /* 타이틀 스타일 */
@@ -15,12 +20,11 @@ h2 {
     font-size: 3.2rem;
     font-weight: 800;
     margin-bottom: 30px;
-    color: #333;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1.5px;
+    color: #0056b3; /* 메인 타이틀 색상을 강조된 블루로 */
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: #0056b3;
 }
 
 /* 시간 간격 입력 필드 스타일 및 버튼 배치 */
@@ -33,7 +37,7 @@ h2 {
 
 .input-group label {
     font-size: 1.6rem;
-    color: #555;
+    color: #334e68;
     margin-right: 15px;
     font-weight: bold;
 }
@@ -102,22 +106,22 @@ h3 {
     margin-right: 30px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* 비디오와 버튼 중앙 정렬 */
+    align-items: center;
 }
 
 .video-container {
     width: 100%;
-    max-width: 640px; /* 비디오 크기 고정 */
+    max-width: 640px;
     border-radius: 15px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     border: 5px solid transparent;
     transition: border 0.3s ease;
-    margin-bottom: 10px; /* 비디오와 버튼 사이의 여백 최소화 */
+    margin-bottom: 10px;
 }
 
 .video-container.ok {
-    border-color: green; 
+    border-color: green;
 }
 
 .video-container.ng {
@@ -138,7 +142,7 @@ h3 {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 5px; /* 비디오와 버튼 사이 여백 최소화 */
+    margin-top: 5px;
 }
 
 .button-group button {
@@ -149,27 +153,27 @@ h3 {
 .prediction-box {
     flex-basis: 350px;
     padding: 25px;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9); /* 내부 박스는 밝고 부드러운 흰색 */
     border-radius: 15px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: border-color 0.3s ease, background-color 0.3s ease;
-    min-height: 150px; /* 박스 높이 고정 */
+    min-height: 150px;
 }
 
 .prediction-box h3 {
     font-size: 2rem;
-    color: #333;
+    color: #334e68; /* 텍스트 색상 조정 */
     margin-bottom: 15px;
     font-weight: 600;
 }
 
 /* 검사 결과 텍스트 */
 .prediction-result {
-    font-size: 2rem; /* 일정한 크기로 유지 */
+    font-size: 2rem;
     font-weight: bold;
-    color: #333;
-    height: 50px; /* 텍스트 결과의 높이를 고정 */
+    color: #334e68;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -187,7 +191,7 @@ h3 {
 .count-box {
     margin-top: 20px;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -195,7 +199,7 @@ h3 {
 
 .count-box p {
     font-size: 1.6rem;
-    color: #333;
+    color: #334e68;
     margin: 5px 0;
 }
 

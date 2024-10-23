@@ -4,6 +4,8 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
 import WebcamCapture from './pages/WebcamCapture/WebcamCapture';
+import Login from './pages/Login/Login';
+import Signup from './pages/Signup/Signup';
 
 function App() {
   return (
@@ -12,7 +14,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/WebcamCapture" element={<WebcamCapture />} />
-        <Route path="/about" element={<div>About Page</div>} />
+        <Route path="/Login" element={<Login/>} />
+        <Route path="/Signup" element={<Signup/>} />
       </Routes>
       <Footer />
     </Router>

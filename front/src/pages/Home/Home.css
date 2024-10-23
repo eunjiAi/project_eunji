@@ -4,9 +4,9 @@
   flex-direction: column;
   align-items: center;
   padding: 50px 20px;
-  background: linear-gradient(135deg, #282c34, #4c8bf5); /* 기존 배경 유지 */
+  background: linear-gradient(135deg, #e9efff, #b2c9ff); /* 밝고 산뜻한 그라데이션 */
   min-height: 100vh;
-  color: white;
+  color: #334e68; /* 부드러운 네이비 색상으로 변경 */
   font-family: 'Roboto', sans-serif;
   overflow-x: hidden;
 }
@@ -15,12 +15,12 @@
 .hero {
   text-align: center;
   margin-bottom: 50px;
-  animation: fadeIn 1.5s ease-out; /* 부드럽게 나타나는 애니메이션 */
+  animation: fadeIn 1.5s ease-out;
 }
 
 .hero-title {
   font-size: 56px;
-  color: #fff;
+  color: #334e68; /* 네이비 톤으로 변경 */
   margin-bottom: 20px;
   font-weight: bold;
   letter-spacing: 2px;
@@ -28,7 +28,7 @@
 
 .hero-description {
   font-size: 20px;
-  color: #ddd;
+  color: #55697e; /* 약간 밝은 그레이/블루 계열로 */
   max-width: 700px;
   margin-bottom: 30px;
   line-height: 1.6;
@@ -44,16 +44,16 @@
 }
 
 .feature {
-  background-color: rgba(255, 255, 255, 0.1); /* 기존 색감 유지 */
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 40px;
   border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); /* 더 부드러운 그림자 */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   text-align: center;
   max-width: 350px;
   text-decoration: none;
-  color: white;
+  color: #334e68; /* 네이비 색상으로 변경 */
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-  backdrop-filter: blur(8px); /* 배경 블러 추가 */
+  backdrop-filter: blur(8px);
 }
 
 .feature-icon img {
@@ -64,22 +64,22 @@
 
 .feature-title {
   font-size: 28px;
-  color: #fff;
+  color: #334e68; /* 타이틀 색상도 네이비 톤으로 변경 */
   margin-bottom: 10px;
   font-weight: 500;
 }
 
 .feature-description {
   font-size: 18px;
-  color: #ccc;
+  color: #55697e; /* 설명 텍스트는 부드러운 블루/그레이 계열로 */
   margin-bottom: 20px;
 }
 
 /* 호버 시 박스 확대 효과 */
 .feature:hover {
   transform: translateY(-10px) scale(1.05);
-  background-color: rgba(255, 255, 255, 0.2); /* 호버 시 조금 더 밝게 */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 /* 반응형 스타일 */
@@ -91,15 +91,5 @@
 
   .feature {
     margin-bottom: 30px;
-  }
-}
-
-/* 페이드 인 애니메이션 */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
   }
 }
