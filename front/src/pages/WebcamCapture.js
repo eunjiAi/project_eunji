@@ -109,7 +109,7 @@ function WebcamCapture() {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h2>웹캠 모드 선택</h2>
+      <h2>OspreyAI 모드 선택</h2>
 
       {/* 모드 선택 버튼 */}
       <div>
@@ -121,7 +121,7 @@ function WebcamCapture() {
       {/* 현재 선택된 모드 표시 */}
       <h3 style={{ marginTop: '20px' }}>현재 선택된 모드: {getModeText()}</h3>
 
-      <video ref={videoRef} autoPlay style={{ width: '1000px', height: '780px', border: '1px solid black', marginTop: '20px' }} />
+      <video ref={videoRef} autoPlay style={{ width: '786px', height: '590px', border: '1px solid black', marginTop: '20px' }} />
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       
       <div style={{ marginTop: '20px' }}>
