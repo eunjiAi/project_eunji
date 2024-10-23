@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './WebcamCapture.css'; // Import the CSS
 
 function WebcamCapture() {
   const [prediction, setPrediction] = useState(''); // 서버에서 받은 예측 결과
@@ -31,6 +32,7 @@ function WebcamCapture() {
   useEffect(() => {
     if (prediction === 'ng') {
       console.log('불량입니다!');
+      stopCapturing(); // NG일 경우 자동으로 Stop
     } else if (prediction === 'ok') {
       console.log('양품입니다!');
     }
@@ -103,11 +105,11 @@ function WebcamCapture() {
   };
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div className="container">
       <h2>OspreyAI 모드 선택</h2>
 
       {/* 시간 간격 선택 */}
-      <div>
+      <div className="input-group">
         <label htmlFor="captureInterval">촬영 간격 (밀리초 단위): </label>
         <input
           type="number"
@@ -126,25 +128,23 @@ function WebcamCapture() {
       </div>
 
       {/* 현재 선택된 모드 표시 */}
-      <h3 style={{ marginTop: '20px' }}>현재 선택된 모드: {getModeText()}</h3>
+      <h3>현재 선택된 모드: {getModeText()}</h3>
 
-      <video ref={videoRef} autoPlay style={{ width: '786px', height: '590px', border: '1px solid black', marginTop: '20px' }} />
+      <div className={`video-container ${prediction}`}>
+        <video ref={videoRef} autoPlay />
+      </div>
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
       
-      <div style={{ marginTop: '20px' }}>
+      <div>
         <button onClick={startCapturing} disabled={intervalId !== null}>Start</button>
         <button onClick={stopCapturing} disabled={intervalId === null}>Stop</button>
       </div>
 
       {/* 검사 결과에 따른 UI 표시 */}
       {prediction && (
-        <div style={{
-          marginTop: '20px', 
-          border: prediction === 'ok' ? '5px solid green' : '5px solid red', 
-          padding: '20px'
-        }}>
+        <div className={`prediction-result ${prediction}`}>
           <h3>검사 결과: {prediction.toUpperCase()}</h3>
-          {prediction === 'ng' && <p style={{ color: 'red', fontSize: '18px' }}>불량입니다!</p>}
+          {prediction === 'ng' && <p>불량입니다!</p>}
         </div>
       )}
     </div>
