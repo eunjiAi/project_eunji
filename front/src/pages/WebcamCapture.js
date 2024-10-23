@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 function WebcamCapture() {
   const [prediction, setPrediction] = useState(''); // 서버에서 받은 예측 결과
   const [intervalId, setIntervalId] = useState(null); // 타이머 ID 저장
-  const [mode, setMode] = useState(''); // 현재 모드 ('capture', 'inspect', 'inspectSave')
+  const [mode, setMode] = useState(''); // 현재 모드 ('inspect', 'inspectSave')
+  const [captureInterval, setCaptureInterval] = useState(1000); // 몇 초마다 촬영할지 (기본값 1초)
   const videoRef = useRef(null); // 웹캠 스트림을 표시할 비디오 엘리먼트
   const canvasRef = useRef(null); // 이미지를 캡처할 캔버스
 
@@ -35,7 +36,7 @@ function WebcamCapture() {
     }
   }, [prediction]);
 
-  // 1초마다 이미지 캡처하여 서버로 전송
+  // n초마다 이미지 캡처하여 서버로 전송
   const startCapturing = () => {
     if (!intervalId && mode) {
       const id = setInterval(async () => {
@@ -51,31 +52,27 @@ function WebcamCapture() {
 
           const imageBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
 
-          if (mode === 'capture') {
-            console.log("Captured image, no classification.");
-          } else {
-            // 검사 모드에서는 서버로 이미지 전송
-            const formData = new FormData();
-            formData.append('image', imageBlob, 'webcam.png');
-            formData.append('mode', mode); // 모드에 따라 다르게 처리
+          // 검사 모드에서는 서버로 이미지 전송
+          const formData = new FormData();
+          formData.append('image', imageBlob, 'webcam.png');
+          formData.append('mode', mode); // 모드에 따라 다르게 처리
 
-            try {
-              const response = await fetch('http://localhost:5000/predict', {
-                method: 'POST',
-                body: formData,
-              });
-              const result = await response.json();
-              setPrediction(result.prediction);
+          try {
+            const response = await fetch('http://localhost:5000/predict', {
+              method: 'POST',
+              body: formData,
+            });
+            const result = await response.json();
+            setPrediction(result.prediction);
 
-              if (mode === 'inspectSave') {
-                console.log(`Saved image with prediction: ${result.prediction}`);
-              }
-            } catch (error) {
-              console.error('Error:', error);
+            if (mode === 'inspectSave') {
+              console.log(`Saved image with prediction: ${result.prediction}`);
             }
+          } catch (error) {
+            console.error('Error:', error);
           }
         }
-      }, 1000); // 1초마다 실행
+      }, captureInterval); // 지정된 시간 간격으로 실행
       setIntervalId(id);
     }
   };
@@ -96,8 +93,6 @@ function WebcamCapture() {
   // 모드에 따른 텍스트 표시
   const getModeText = () => {
     switch (mode) {
-      case 'capture':
-        return '기본 촬영 모드';
       case 'inspect':
         return '검사(기본) 모드';
       case 'inspectSave':
@@ -111,9 +106,21 @@ function WebcamCapture() {
     <div style={{ textAlign: 'center' }}>
       <h2>OspreyAI 모드 선택</h2>
 
+      {/* 시간 간격 선택 */}
+      <div>
+        <label htmlFor="captureInterval">촬영 간격 (밀리초 단위): </label>
+        <input
+          type="number"
+          id="captureInterval"
+          value={captureInterval}
+          onChange={(e) => setCaptureInterval(parseInt(e.target.value))}
+          min="100"
+          step="100"
+        />
+      </div>
+
       {/* 모드 선택 버튼 */}
       <div>
-        <button onClick={() => setMode('capture')}>캡쳐 모드</button>
         <button onClick={() => setMode('inspect')}>검사(기본) 모드</button>
         <button onClick={() => setMode('inspectSave')}>검사(저장) 모드</button>
       </div>
