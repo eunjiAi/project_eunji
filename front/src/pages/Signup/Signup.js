@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Signup.css'; // Signup.css 파일 불러오기
+import './Signup.css'; // 위에서 작성한 Signup.css 파일
 import { useNavigate } from 'react-router-dom';
 
 function Signup() {
@@ -19,7 +19,7 @@ function Signup() {
       alert('비밀번호가 일치하지 않습니다!');
       return;
     }
-    // 회원가입 로직 처리 (ex. API 호출)
+    // 회원가입 처리 로직 (ex. API 호출)
     console.log('회원가입 정보', { email, password, name, birthdate, gender, phone, agreeTerms });
     navigate('/dashboard'); // 회원가입 후 리다이렉트
   };
@@ -115,22 +115,24 @@ function Signup() {
             />
           </div>
           <div className="input-group checkbox-group">
-            <label>
-              <input 
-                type="checkbox" 
-                checked={agreeTerms} 
-                onChange={() => setAgreeTerms(!agreeTerms)} 
-                required 
-              />
-              <span className="checkbox-mark"></span> 이용약관에 동의합니다.
-            </label>
+
             <div className="terms-text">
+
               <p>
                 본 서비스는 사용자 정보를 보호하며, 수집된 데이터는 사용자에게 맞춤형 서비스를 제공하기 위한 목적으로만 사용됩니다.
               </p>
               <p>
                 더 자세한 내용은 <a href="/terms" target="_blank">이용약관</a>을 참조하십시오.
+
+                <input 
+                  type="checkbox" 
+                  checked={agreeTerms} 
+                  onChange={() => setAgreeTerms(!agreeTerms)} 
+                  required 
+                />
+                <span className="checkbox-mark"></span> 
               </p>
+              
             </div>
           </div>
           <button type="submit" className="signup-button">회원가입</button>
