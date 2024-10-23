@@ -7,7 +7,7 @@ function Header() {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-logo">
-          <span className="project-name">ProjectEJ</span>
+          <span className="project-name">OspreyAI</span>
         </div>
         <ul className="navbar-menu">
           <li className="navbar-item">
