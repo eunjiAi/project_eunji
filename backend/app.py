@@ -1,29 +1,34 @@
-
-# CNN 딥러닝모델 사용함!
-
-import os
 from flask import Flask, request, jsonify
 import tensorflow as tf
+from flask_cors import CORS
+import os
 from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)  # CORS 설정 추가
 
 # ResNet 모델 로드
 resnet_model = tf.keras.models.load_model('models/train_1021.h5')
 
-# 결과를 저장할 경로 설정
-RESULT_DIR = r'C:\Users\ict01-20\OneDrive\바탕 화면\projectUpload\result'
+# 기본 저장 경로 설정
+BASE_DIR = r'C:\Users\ict01-20\OneDrive\바탕 화면\projectUpload'
+RESULT_DIR = os.path.join(BASE_DIR, 'result')
+CAPTURE_DIR = os.path.join(BASE_DIR, 'Capture')
+LOG_FILE_PATH = os.path.join(BASE_DIR, 'inspection_log.txt')
 
-# 결과 폴더 생성 함수
-def create_result_folder():
-    if not os.path.exists(RESULT_DIR):
-        os.makedirs(RESULT_DIR)
-    ok_path = os.path.join(RESULT_DIR, 'ok')
-    ng_path = os.path.join(RESULT_DIR, 'ng')
-    if not os.path.exists(ok_path):
-        os.makedirs(ok_path)
-    if not os.path.exists(ng_path):
-        os.makedirs(ng_path)
+# 폴더가 없으면 생성하는 함수
+def create_folder_if_not_exists(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+# 검사(기본) 모드 시 로그 기록 함수
+def log_inspection_result(label):
+    # 로그 파일이 저장될 폴더가 없으면 생성
+    create_folder_if_not_exists(BASE_DIR)
+    # 로그 파일에 결과 기록
+    with open(LOG_FILE_PATH, 'a') as log_file:
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        log_file.write(f"{timestamp} - Prediction: {label}\n")
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -33,9 +38,9 @@ def predict():
     # 파일 이름 가져오기
     image_filename = image_file.filename
 
-    # 이미지 전처리 (모델이 기대하는 크기: 150x150)
+    # 이미지 전처리
     img = tf.image.decode_image(image_file.read(), channels=3)
-    img = tf.image.resize(img, [150, 150])  # 150x150으로 리사이즈
+    img = tf.image.resize(img, [150, 150]) 
     img = tf.expand_dims(img, axis=0)
 
     # 모델 예측
@@ -44,18 +49,33 @@ def predict():
     # 예측 결과에 따라 라벨 설정 (0.5 기준)
     label = 'ok' if prediction[0][0] > 0.5 else 'ng'
 
-    # 결과 파일 저장
-    create_result_folder()
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    image_path = os.path.join(RESULT_DIR, label, f'{timestamp}_{label}.png')
+    # 모드에 따라 다른 처리 수행
+    mode = request.form.get('mode')  # 클라이언트에서 모드 받아오기 (capture, inspect, inspectSave)
 
-    # 이미지를 저장
-    tf.keras.preprocessing.image.save_img(image_path, img[0])
+    if mode == 'capture':
+        # 기본 촬영 모드: Capture 폴더에 저장
+        create_folder_if_not_exists(CAPTURE_DIR)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        image_path = os.path.join(CAPTURE_DIR, f'{timestamp}_capture.png')
+        tf.keras.preprocessing.image.save_img(image_path, img[0])
+        return jsonify({'message': f'Image saved at {image_path}'})
 
-    # 콘솔 출력
-    print(f"Image: {image_filename} | Prediction: {label} | Saved at: {image_path}")
+    elif mode == 'inspect':
+        # 검사(기본) 모드: 로그에 저장
+        log_inspection_result(label)
+        return jsonify({'message': 'Result logged', 'prediction': label})
 
-    return jsonify({'prediction': label, 'image_path': image_path})
+    elif mode == 'inspectSave':
+        # 검사(촬영) 모드: Result 폴더에 저장
+        create_folder_if_not_exists(RESULT_DIR)
+        create_folder_if_not_exists(os.path.join(RESULT_DIR, label))
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        image_path = os.path.join(RESULT_DIR, label, f'{timestamp}_{label}.png')
+        tf.keras.preprocessing.image.save_img(image_path, img[0])
+        return jsonify({'message': f'Image saved at {image_path}', 'prediction': label})
+
+    else:
+        return jsonify({'error': 'Invalid mode selected'}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)

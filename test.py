@@ -24,7 +24,7 @@ def preprocess_image(image_path, target_size=(150, 150)):
 # 모델 경로에서 .h5 파일을 자동으로 찾는 함수
 def find_model_file(model_path):
     """
-    입력된 경로가 디렉토리일 경우 해당 디렉토리에서 .h5 파일을 찾아 반환.
+    입력된 경로가 디렉토리일 경우 해당 디렉토리에서 .h5 파일을 찾아 반환
     """
     if os.path.isdir(model_path):
         for file_name in os.listdir(model_path):
@@ -68,7 +68,7 @@ def classify_images_in_directory(model, dataset_directory, result_directory):
             print(f"Image: {filename}, Classified as: {result}, Probability: {prediction_value:.4f}")
 
 
-# 명령줄 인수 처리
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="이미지 분류기")
     
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     # 인수 파싱
     args = parser.parse_args()
     
-    # 모델 파일 로드 (경로가 디렉토리일 경우 .h5 파일을 찾아서 로드)
+    # 모델 파일 로드 (경로가 디렉토리일 경우 .h5 파일을 찾아서 로드함!)
     model_file = find_model_file(args.model)
     model = load_model(model_file)
 

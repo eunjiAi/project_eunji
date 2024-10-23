@@ -1,59 +1,35 @@
-import os
-from flask import Flask, request, jsonify
 import tensorflow as tf
-from datetime import datetime
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-app = Flask(__name__)
+# 데이터셋 생성 및 전처리 (예시로 이미지 폴더 사용)
+train_datagen = ImageDataGenerator(rescale=1./255)
+train_generator = train_datagen.flow_from_directory(
+    'data/train',  # 학습용 데이터 경로
+    target_size=(150, 150),
+    batch_size=32,
+    class_mode='binary'
+)
 
-# CNN 모델 로드
-cnn_model = tf.keras.models.load_model('models/small_cnn_model.h5')
+# CNN 모델 정의 (예측 코드에 맞춘 CNN 구조)
+model = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3)),
+    MaxPooling2D(2, 2),
+    Conv2D(64, (3, 3), activation='relu'),
+    MaxPooling2D(2, 2),
+    Flatten(),
+    Dense(512, activation='relu'),
+    Dense(1, activation='sigmoid')  # 이진 분류 (OK/NG)
+])
 
-# 결과를 저장할 경로 설정
-RESULT_DIR = r'C:\Users\ict01-20\OneDrive\바탕 화면\projectUpload\result'
+# 모델 컴파일
+model.compile(loss='binary_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
 
-# 결과 폴더 생성 함수
-def create_result_folder():
-    if not os.path.exists(RESULT_DIR):
-        os.makedirs(RESULT_DIR)
-    ok_path = os.path.join(RESULT_DIR, 'ok')
-    ng_path = os.path.join(RESULT_DIR, 'ng')
-    if not os.path.exists(ok_path):
-        os.makedirs(ok_path)
-    if not os.path.exists(ng_path):
-        os.makedirs(ng_path)
+# 모델 학습
+model.fit(train_generator, epochs=10)
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    # 이미지 파일 받기
-    image_file = request.files['image']
-    
-    # 파일 이름 가져오기
-    image_filename = image_file.filename
-
-    # 이미지 전처리 (모델이 기대하는 크기: 150x150)
-    img = tf.image.decode_image(image_file.read(), channels=3)
-    img = tf.image.resize(img, [150, 150])
-    img = tf.expand_dims(img, axis=0)  
-    img = img / 255.0  
-
-    # 모델 예측
-    prediction = cnn_model.predict(img)
-
-    # 예측 결과에 따라 라벨 설정 (0.5 기준)
-    label = 'ok' if prediction[0][0] > 0.5 else 'ng'
-
-    # 결과 파일 저장
-    create_result_folder()
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    image_path = os.path.join(RESULT_DIR, label, f'{timestamp}_{label}.png')
-
-    # 이미지를 저장
-    tf.keras.preprocessing.image.save_img(image_path, img[0])
-
-    # 콘솔 출력
-    print(f"Image: {image_filename} | Prediction: {label} | Saved at: {image_path}")
-
-    return jsonify({'prediction': label, 'image_path': image_path})
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# 학습된 모델 저장
+model.save('models/1022train.h5')

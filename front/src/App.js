@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Home from './pages/Home/Home';
-import Upload from './pages/Upload';
+import WebcamCapture from './pages/WebcamCapture';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/upload" element={<Upload />} />
+        <Route path="/WebcamCapture" element={<WebcamCapture />} />
         <Route path="/about" element={<div>About Page</div>} />
       </Routes>
     </Router>

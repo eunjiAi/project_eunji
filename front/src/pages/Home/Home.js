@@ -17,7 +17,7 @@ function Home() {
           <h2 className="feature-title">classification1</h2>
           <p className="feature-description">classification1</p>
         </Link>
-        <Link to="/upload" className="feature">
+        <Link to="/WebcamCapture" className="feature">
           <h2 className="feature-title">classification2</h2>
           <p className="feature-description">classification2</p>
         </Link>
