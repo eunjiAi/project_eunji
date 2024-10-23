@@ -4,6 +4,8 @@ import './WebcamCapture.css'; // Import the CSS
 
 function WebcamCapture() {
   const [prediction, setPrediction] = useState('검사전'); // 초기 상태는 '검사전'
+  const [okCount, setOkCount] = useState(0); // OK 카운트
+  const [ngCount, setNgCount] = useState(0); // NG 카운트
   const [intervalId, setIntervalId] = useState(null); // 타이머 ID 저장
   const [mode, setMode] = useState(''); // 현재 모드 ('inspect', 'inspectSave')
   const [captureInterval, setCaptureInterval] = useState(1000); // 몇 초마다 촬영할지 (기본값 1초)
@@ -21,7 +23,7 @@ function WebcamCapture() {
         console.error("Error accessing webcam:", err);
       }
     }
-    
+
     startWebcam();
 
     // 페이지 이동 시 웹캠 종료 처리
@@ -35,11 +37,10 @@ function WebcamCapture() {
     window.addEventListener('beforeunload', stopWebcam);
 
     return () => {
-      // 컴포넌트 언마운트 시 웹캠 스트림 종료
       stopWebcam();
       window.removeEventListener('beforeunload', stopWebcam);
     };
-  }, [navigate]); // 페이지 이동을 감지하는 useNavigate 훅 사용
+  }, [navigate]);
 
   // prediction 상태 변경 감지
   useEffect(() => {
@@ -59,7 +60,6 @@ function WebcamCapture() {
         const canvas = canvasRef.current;
         const video = videoRef.current;
 
-        // video가 로드되면 width와 height에 접근
         if (video && video.videoWidth) {
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
@@ -68,10 +68,9 @@ function WebcamCapture() {
 
           const imageBlob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
 
-          // 검사 모드에서는 서버로 이미지 전송
           const formData = new FormData();
           formData.append('image', imageBlob, 'webcam.png');
-          formData.append('mode', mode); // 모드에 따라 다르게 처리
+          formData.append('mode', mode);
 
           try {
             const response = await fetch('http://localhost:5000/predict', {
@@ -80,10 +79,8 @@ function WebcamCapture() {
             });
             const result = await response.json();
             setPrediction(result.prediction); // OK 또는 NG로 변경
-
-            if (mode === 'inspectSave') {
-              console.log(`Saved image with prediction: ${result.prediction}`);
-            }
+            setOkCount(result.ok_count); // OK 카운트 업데이트
+            setNgCount(result.ng_count); // NG 카운트 업데이트
           } catch (error) {
             console.error('Error:', error);
           }
@@ -122,45 +119,59 @@ function WebcamCapture() {
     <div className="container">
       <h2>OspreyAI 모드 선택</h2>
 
-      {/* 시간 간격 선택 */}
-      <div className="input-group">
-        <label htmlFor="captureInterval">촬영 간격 (밀리초 단위): </label>
-        <input
-          type="number"
-          id="captureInterval"
-          value={captureInterval}
-          onChange={(e) => setCaptureInterval(parseInt(e.target.value))}
-          min="100"
-          step="100"
-        />
-      </div>
-
-      {/* 모드 선택 버튼 */}
-      <div>
-        <button onClick={() => setMode('inspect')}>검사(기본) 모드</button>
-        <button onClick={() => setMode('inspectSave')}>검사(저장) 모드</button>
-      </div>
-
-      {/* 현재 선택된 모드 표시 */}
-      <h3>현재 선택된 모드: {getModeText()}</h3>
-
       <div className="main-content">
-        <div className={`video-container ${prediction}`}>
-          <video ref={videoRef} autoPlay />
-        </div>
-        
-        <div className={`prediction-box ${prediction}`}>
-          <h3>검사 결과</h3>
-          <div className={`prediction-result ${prediction}`}>
-            <h3>{prediction.toUpperCase()}</h3>
-            {prediction === 'ng' && <p>불량입니다!</p>}
+        {/* 왼쪽: 비디오 촬영 박스 */}
+        <div className="left-panel">
+          <div className={`video-container ${prediction}`}>
+            <video ref={videoRef} autoPlay />
           </div>
         </div>
 
+        {/* 오른쪽: 설정 및 검사 결과 */}
+        <div className="right-panel">
+          {/* 시간 간격 선택 */}
+          <div className="input-group">
+            <label htmlFor="captureInterval">촬영 간격 (밀리초 단위): </label>
+            <input
+              type="number"
+              id="captureInterval"
+              value={captureInterval}
+              onChange={(e) => setCaptureInterval(parseInt(e.target.value))}
+              min="100"
+              step="100"
+            />
+          </div>
+
+          {/* 모드 선택 버튼 */}
+          <div className="button-group">
+            <button onClick={() => setMode('inspect')}>검사(기본) 모드</button>
+            <button onClick={() => setMode('inspectSave')}>검사(저장) 모드</button>
+          </div>
+
+          {/* 현재 선택된 모드 표시 */}
+          <h3>현재 선택된 모드: {getModeText()}</h3>
+
+          {/* 검사 결과 박스 */}
+          <div className={`prediction-box ${prediction}`}>
+            <h3>검사 결과</h3>
+            <div className={`prediction-result ${prediction}`}>
+              <h3>{prediction.toUpperCase()}</h3>
+              {prediction === 'ng' && <p>불량입니다!</p>}
+            </div>
+          </div>
+
+          {/* 검사 카운트 표시 */}
+          <div className="count-box">
+            <p>총 검사 횟수: <strong>{okCount + ngCount}</strong></p>
+            <p>OK: <strong>{okCount}</strong></p>
+            <p>NG: <strong>{ngCount}</strong></p>
+          </div>
+
+        </div>
       </div>
 
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-      
+
       <div>
         <button onClick={startCapturing} disabled={intervalId !== null}>Start</button>
         <button onClick={stopCapturing} disabled={intervalId === null}>Stop</button>

@@ -16,6 +16,10 @@ RESULT_DIR = os.path.join(BASE_DIR, 'result')
 CAPTURE_DIR = os.path.join(BASE_DIR, 'Capture')
 LOG_FILE_PATH = os.path.join(BASE_DIR, 'inspection_log.txt')
 
+# OK/NG 카운트
+ok_count = 0
+ng_count = 0
+
 # 폴더가 없으면 생성하는 함수
 def create_folder_if_not_exists(directory):
     if not os.path.exists(directory):
@@ -32,6 +36,8 @@ def log_inspection_result(label):
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    global ok_count, ng_count  # OK/NG 카운트 접근
+
     # 이미지 파일 받기
     image_file = request.files['image']
     
@@ -48,6 +54,12 @@ def predict():
 
     # 예측 결과에 따라 라벨 설정 (0.5 기준)
     label = 'ok' if prediction[0][0] > 0.5 else 'ng'
+
+    # OK/NG 카운트 증가
+    if label == 'ok':
+        ok_count += 1
+    else:
+        ng_count += 1
 
     # 콘솔에 예측 결과 출력
     print(f"Prediction result for {image_filename}: {label}")
@@ -66,7 +78,7 @@ def predict():
     elif mode == 'inspect':
         # 검사(기본) 모드: 로그에 저장
         log_inspection_result(label)
-        return jsonify({'message': 'Result logged', 'prediction': label})
+        return jsonify({'message': 'Result logged', 'prediction': label, 'ok_count': ok_count, 'ng_count': ng_count})
 
     elif mode == 'inspectSave':
         # 검사(촬영) 모드: Result 폴더에 저장
@@ -75,7 +87,7 @@ def predict():
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         image_path = os.path.join(RESULT_DIR, label, f'{timestamp}_{label}.png')
         tf.keras.preprocessing.image.save_img(image_path, img[0])
-        return jsonify({'message': f'Image saved at {image_path}', 'prediction': label})
+        return jsonify({'message': f'Image saved at {image_path}', 'prediction': label, 'ok_count': ok_count, 'ng_count': ng_count})
 
     else:
         return jsonify({'error': 'Invalid mode selected'}), 400
