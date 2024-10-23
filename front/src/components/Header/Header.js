@@ -7,12 +7,9 @@ function Header() {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-logo">
-          <span className="project-name">OspreyAI</span>
+          <Link to="/" className="project-name">OspreyAI</Link> {/* 프로젝트 이름에 Home 링크 추가 */}
         </div>
         <ul className="navbar-menu">
-          <li className="navbar-item">
-            <Link to="/" className="navbar-link">Home</Link>
-          </li>
           <li className="navbar-item dropdown">
             <Link to="/about" className="navbar-link">About</Link>
             <ul className="dropdown-menu">
@@ -21,7 +18,7 @@ function Header() {
             </ul>
           </li>
           <li className="navbar-item dropdown">
-            <Link to="/upload" className="navbar-link">Upload</Link>
+            <Link to="/upload" className="navbar-link">Contact Us</Link>
             <ul className="dropdown-menu">
               <li><Link to="/upload/images" className="dropdown-link">Upload Images</Link></li>
               <li><Link to="/upload/documents" className="dropdown-link">Upload Documents</Link></li>

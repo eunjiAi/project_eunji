@@ -15,9 +15,10 @@
   width: 100%;
 }
 
-/* 왼쪽 내이름로고 */
+/* 왼쪽위 프로젝트 로고 */
 .project-name {
   font-size: 24px; 
+  text-decoration: none; 
   font-weight: bold;
   color: #333;
   margin-right: 50px; /* ProjectEJ와 메뉴 간 간격 */
