@@ -2,23 +2,26 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 40px;
-    background-color: #f7f7f7; /* 밝은 배경 */
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 0.01%;
+    background-color: #f4f4f4;
     border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* 더 깊이 있는 그림자 */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     font-family: 'Roboto', sans-serif;
 }
 
 /* 타이틀 스타일 */
 h2 {
-    font-size: 3rem;
+    font-size: 3.2rem;
     font-weight: 800;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     color: #333;
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* 약간의 텍스트 그림자 추가 */
+    letter-spacing: 1.5px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #0056b3;
 }
 
 /* 시간 간격 입력 필드 스타일 및 버튼 배치 */
@@ -42,6 +45,7 @@ h2 {
     font-size: 1.4rem;
     border-radius: 10px;
     border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
@@ -56,7 +60,7 @@ button {
     background-color: #0056b3;
     color: white;
     border: none;
-    padding: 15px 30px;
+    padding: 14px 28px;
     font-size: 1.4rem;
     font-weight: bold;
     border-radius: 30px;
@@ -66,14 +70,15 @@ button {
 }
 
 button:hover {
-    background-color: #003f7f;
+    background-color: #004299;
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 button:disabled {
     background-color: #aaa;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 /* 모드 선택된 상태 표시 */
@@ -82,6 +87,8 @@ h3 {
     color: #0056b3;
     margin-bottom: 20px;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
 }
 
 /* 메인 콘텐츠 레이아웃 (비디오 + 검사 결과 박스) */
@@ -93,27 +100,52 @@ h3 {
 }
 
 /* 왼쪽 비디오 컨테이너 */
-.video-container {
+.left-panel {
     flex-grow: 2;
     margin-right: 30px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 비디오와 버튼 중앙 정렬 */
+}
+
+.video-container {
+    width: 100%;
+    max-width: 640px; /* 비디오 크기 고정 */
     border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* 비디오가 컨테이너에 맞게 자르도록 설정 */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    border: 5px solid transparent;
+    transition: border 0.3s ease;
+    margin-bottom: 10px; /* 비디오와 버튼 사이의 여백 최소화 */
+}
+
+.video-container.ok {
+    border-color: green; 
+}
+
+.video-container.ng {
+    border-color: red;
 }
 
 .video-container video {
     width: 100%;
+    height: auto;
+    display: block;
     border-radius: 15px;
-    transition: border 0.3s ease;
+    object-fit: cover;
 }
 
-.video-container.ok video {
-    border: 5px solid green;
+/* 버튼을 비디오 바로 아래에 배치 */
+.button-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px; /* 비디오와 버튼 사이 여백 최소화 */
 }
 
-.video-container.ng video {
-    border: 5px solid red;
+.button-group button {
+    margin-right: 10px;
 }
 
 /* 검사 결과 박스 */
@@ -122,9 +154,10 @@ h3 {
     padding: 25px;
     background-color: #ffffff;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: border-color 0.3s ease, background-color 0.3s ease;
+    min-height: 150px; /* 박스 높이 고정 */
 }
 
 .prediction-box h3 {
@@ -136,9 +169,13 @@ h3 {
 
 /* 검사 결과 텍스트 */
 .prediction-result {
-    font-size: 2.4rem;
+    font-size: 2rem; /* 일정한 크기로 유지 */
     font-weight: bold;
     color: #333;
+    height: 50px; /* 텍스트 결과의 높이를 고정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .prediction-result.ok {
@@ -155,7 +192,7 @@ h3 {
     padding: 20px;
     background-color: #f0f0f0;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 

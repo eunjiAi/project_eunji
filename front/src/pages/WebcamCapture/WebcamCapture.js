@@ -156,7 +156,7 @@ function WebcamCapture() {
             <h3>검사 결과</h3>
             <div className={`prediction-result ${prediction}`}>
               <h3>{prediction.toUpperCase()}</h3>
-              {prediction === 'ng' && <p>불량입니다!</p>}
+              {prediction === 'ng' && <p>불량입니다</p>}
             </div>
           </div>
 
