@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate로 변경
-import './WebcamCapture.css'; // Import the CSS
+import { useNavigate } from 'react-router-dom';
+import './WebcamCapture.css';
 
 function WebcamCapture() {
-  const [modelName, setModelName] = useState(''); // State to hold the model name
-  const [prediction, setPrediction] = useState('검사전'); // 초기 상태는 '검사전'
-  const [okCount, setOkCount] = useState(0); // OK 카운트
-  const [ngCount, setNgCount] = useState(0); // NG 카운트
-  const [intervalId, setIntervalId] = useState(null); // 타이머 ID 저장
-  const [mode, setMode] = useState(''); // 현재 모드 ('inspect', 'inspectSave')
-  const [captureInterval, setCaptureInterval] = useState(1000); // 몇 초마다 촬영할지 (기본값 1초)
-  const videoRef = useRef(null); // 웹캠 스트림을 표시할 비디오 엘리먼트
-  const canvasRef = useRef(null); // 이미지를 캡처할 캔버스
-  const navigate = useNavigate(); // 페이지 이동을 감지하는 useNavigate 훅 사용
+  const [modelName, setModelName] = useState('');
+  const [prediction, setPrediction] = useState('검사전');
+  const [okCount, setOkCount] = useState(0);
+  const [ngCount, setNgCount] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
+  const [mode, setMode] = useState('');
+  const [captureInterval, setCaptureInterval] = useState(1000);
+  const [detectedObjects, setDetectedObjects] = useState([]); // 객체 탐지 결과 상태
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const overlayRef = useRef(null); // 객체 탐지 박스를 그릴 캔버스
+  const navigate = useNavigate();
 
   // 웹캠 스트림 시작
   useEffect(() => {
@@ -21,20 +23,20 @@ function WebcamCapture() {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         videoRef.current.srcObject = stream;
       } catch (err) {
-        console.error("Error accessing webcam:", err);
+        console.error("웹캠 접근 오류:", err);
       }
     }
 
     startWebcam();
 
-    // 페이지 이동 시 웹캠 종료 처리
+    // 웹캠 종료 처리
     const stopWebcam = () => {
       if (videoRef.current && videoRef.current.srcObject) {
         videoRef.current.srcObject.getTracks().forEach(track => track.stop());
       }
     };
 
-    // 페이지가 언마운트되거나 닫힐 때 웹캠 스트림 중지
+    // 페이지 언마운트 시 웹캠 중지
     window.addEventListener('beforeunload', stopWebcam);
 
     return () => {
@@ -46,24 +48,23 @@ function WebcamCapture() {
   // 모델 이름 가져오기
   useEffect(() => {
     const fetchModelName = async () => {
-        try {
-            const response = await fetch('http://localhost:5000/model-name');
-            const data = await response.json();
-            console.log('Model Name Response:', data); // 서버 응답 확인용 로그
-            setModelName(data.model_name);
-        } catch (error) {
-            console.error('Error fetching model name:', error);
-        }
+      try {
+        const response = await fetch('http://localhost:5000/model-name');
+        const data = await response.json();
+        console.log('Model Name Response:', data);
+        setModelName(data.model_name);
+      } catch (error) {
+        console.error('모델 이름 가져오기 오류:', error);
+      }
     };
     fetchModelName();
-}, []);
-
+  }, []);
 
   // prediction 상태 변경 감지
   useEffect(() => {
     if (prediction === 'ng') {
       console.log('불량입니다!');
-      stopCapturing(); // NG일 경우 자동으로 Stop
+      stopCapturing();
     } else if (prediction === 'ok') {
       console.log('양품입니다!');
     }
@@ -72,7 +73,7 @@ function WebcamCapture() {
   // n초마다 이미지 캡처하여 서버로 전송
   const startCapturing = () => {
     if (!intervalId && mode) {
-      setPrediction('검사중'); // 검사 중으로 변경
+      setPrediction('검사중');
       const id = setInterval(async () => {
         const canvas = canvasRef.current;
         const video = videoRef.current;
@@ -95,14 +96,16 @@ function WebcamCapture() {
               body: formData,
             });
             const result = await response.json();
-            setPrediction(result.prediction); // OK 또는 NG로 변경
-            setOkCount(result.ok_count); // OK 카운트 업데이트
-            setNgCount(result.ng_count); // NG 카운트 업데이트
+            setPrediction(result.prediction);
+            setOkCount(result.ok_count);
+            setNgCount(result.ng_count);
+            setDetectedObjects(result.detected_objects || []);
+            drawDetectedObjects(result.detected_objects || []);
           } catch (error) {
             console.error('Error:', error);
           }
         }
-      }, captureInterval); // 지정된 시간 간격으로 실행
+      }, captureInterval);
       setIntervalId(id);
     }
   };
@@ -117,7 +120,7 @@ function WebcamCapture() {
 
   // 모드 변경 시 기존 타이머 중지
   useEffect(() => {
-    stopCapturing(); // 모드가 바뀔 때 캡처를 중지
+    stopCapturing();
   }, [mode]);
 
   // 모드에 따른 텍스트 표시
@@ -126,10 +129,39 @@ function WebcamCapture() {
       case 'inspect':
         return '검사(기본) 모드';
       case 'inspectSave':
-        return '검사(촬영) 모드';
+        return '검사(저장) 모드';
       default:
         return '선택 전';
     }
+  };
+
+  // 객체 탐지 결과를 캔버스에 그리기
+  const drawDetectedObjects = (objects) => {
+    const video = videoRef.current;
+    const overlayCanvas = overlayRef.current;
+    if (!overlayCanvas) return;
+
+    overlayCanvas.width = video.videoWidth;
+    overlayCanvas.height = video.videoHeight;
+    const ctx = overlayCanvas.getContext('2d');
+
+    // 기존 그리기 내용 지우기
+    ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+    // 박스 그리기
+    objects.forEach(obj => {
+      const [xmin, ymin, xmax, ymax] = obj.box;
+      const width = xmax - xmin;
+      const height = ymax - ymin;
+
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(xmin * overlayCanvas.width, ymin * overlayCanvas.height, width * overlayCanvas.width, height * overlayCanvas.height);
+
+      ctx.font = '16px Arial';
+      ctx.fillStyle = 'red';
+      ctx.fillText(`${obj.class} (${(obj.score * 100).toFixed(1)}%)`, xmin * overlayCanvas.width, ymin * overlayCanvas.height - 10);
+    });
   };
 
   return (
@@ -141,6 +173,7 @@ function WebcamCapture() {
         <div className="left-panel">
           <div className={`video-container ${prediction}`}>
             <video ref={videoRef} autoPlay />
+            <canvas ref={overlayRef} className="overlay-canvas" />
           </div>
         </div>
 

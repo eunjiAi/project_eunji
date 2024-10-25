@@ -110,6 +110,7 @@ h3 {
 }
 
 .video-container {
+    position: relative; /* 객체 탐지 박스를 겹치기 위해 상대 위치 설정 */
     width: 100%;
     max-width: 640px;
     border-radius: 15px;
@@ -134,6 +135,16 @@ h3 {
     display: block;
     border-radius: 15px;
     object-fit: cover;
+}
+
+/* 객체 탐지 박스를 그릴 캔버스 */
+.overlay-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 캔버스가 마우스 이벤트를 차단하지 않도록 설정 */
 }
 
 /* 버튼을 비디오 바로 아래에 배치 */
@@ -161,7 +172,7 @@ h3 {
     min-height: 150px;
 }
 
-/* 검사 결과 박스 */
+/* 검사 결과 박스 타이틀 */
 .prediction-box h3 {
     font-size: 2rem;
     color: #334e68;
@@ -204,14 +215,9 @@ h3 {
     margin: 5px 0;
 }
 
-/* 모드 버튼과 시간 간격 입력 필드를 나란히 배치 */
-.button-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
-}
+/* 추가된 스타일 */
 
-.button-group button {
-    margin-right: 20px;
+/* 숨겨진 캔버스 (이미지 캡처용) */
+canvas[style*="display: none"] {
+    display: none;
 }
