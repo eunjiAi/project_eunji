@@ -131,7 +131,7 @@ function WebcamCapture() {
         <div className="right-panel">
           {/* 시간 간격 선택 */}
           <div className="input-group">
-            <label htmlFor="captureInterval">촬영 간격 (밀리초 단위): </label>
+            <label htmlFor="captureInterval">촬영 간격 (밀리초): </label>
             <input
               type="number"
               id="captureInterval"
