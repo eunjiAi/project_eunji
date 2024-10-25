@@ -46,17 +46,18 @@ function WebcamCapture() {
   // 모델 이름 가져오기
   useEffect(() => {
     const fetchModelName = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/model-name');
-        const data = await response.json();
-        setModelName(data.model_name);
-      } catch (error) {
-        console.error('Error fetching model name:', error);
-      }
+        try {
+            const response = await fetch('http://localhost:5000/model-name');
+            const data = await response.json();
+            console.log('Model Name Response:', data); // 서버 응답 확인용 로그
+            setModelName(data.model_name);
+        } catch (error) {
+            console.error('Error fetching model name:', error);
+        }
     };
-
     fetchModelName();
-  }, []);
+}, []);
+
 
   // prediction 상태 변경 감지
   useEffect(() => {
