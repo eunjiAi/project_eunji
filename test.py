@@ -1,6 +1,6 @@
 
 # USAGE:
-# python test.py -m model -d testdata -i result
+# python test.py -m models -d testdata -i result
 
 import numpy as np
 from tensorflow.keras.models import load_model
