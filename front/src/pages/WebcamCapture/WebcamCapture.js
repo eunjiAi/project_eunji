@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'; // useNavigate로 변경
 import './WebcamCapture.css'; // Import the CSS
 
 function WebcamCapture() {
+  const [modelName, setModelName] = useState(''); // State to hold the model name
   const [prediction, setPrediction] = useState('검사전'); // 초기 상태는 '검사전'
   const [okCount, setOkCount] = useState(0); // OK 카운트
   const [ngCount, setNgCount] = useState(0); // NG 카운트
@@ -41,6 +42,21 @@ function WebcamCapture() {
       window.removeEventListener('beforeunload', stopWebcam);
     };
   }, [navigate]);
+
+  // 모델 이름 가져오기
+  useEffect(() => {
+    const fetchModelName = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/model-name');
+        const data = await response.json();
+        setModelName(data.model_name);
+      } catch (error) {
+        console.error('Error fetching model name:', error);
+      }
+    };
+
+    fetchModelName();
+  }, []);
 
   // prediction 상태 변경 감지
   useEffect(() => {
@@ -117,7 +133,7 @@ function WebcamCapture() {
 
   return (
     <div className="container">
-      <h2>OspreyAI 모드 선택</h2>
+      <h2>OspreyAI System - {modelName}</h2>
 
       <div className="main-content">
         {/* 왼쪽: 비디오 촬영 박스 */}
