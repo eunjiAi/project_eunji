@@ -7,7 +7,7 @@ import numpy as np
 import cv2
 
 app = Flask(__name__)
-CORS(app)  # CORS 설정 추가
+CORS(app)  
 
 # 모델이 저장된 디렉토리 설정
 MODELS_DIR = r'D:\eunjiAi\project_eunji\backend\models'
@@ -31,7 +31,7 @@ def create_folder_if_not_exists(directory):
 def find_model_file(models_dir):
     for file in os.listdir(models_dir):
         if file.endswith('.h5'):
-            return os.path.join(models_dir, file), file  # 파일 경로와 파일명을 함께 반환
+            return os.path.join(models_dir, file), file      # 파일 경로와 파일명을 함께 반환
     return None, None
 
 # 분류 모델 로드 함수
